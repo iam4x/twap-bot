@@ -1,0 +1,50 @@
+{
+  "name": "@iam4x/twap-bot",
+  "private": false,
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "tsc -w",
+    "start": "node dist/index.js",
+    "lint-ts": "tsc --noEmit",
+    "lint-js": "eslint --ext .js,.ts src",
+    "lint": "npm run lint-ts && npm run lint-js",
+    "build": "rm -rf dist && tsc"
+  },
+  "keywords": [
+    "twap",
+    "crypto",
+    "binance",
+    "okx",
+    "bitget",
+    "gateio",
+    "bot",
+    "trading"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "lodash": "^4.17.21",
+    "safe-cex": "^7.0.0-beta.1",
+    "ws": "^8.13.0"
+  },
+  "devDependencies": {
+    "@babel/eslint-parser": "^7.22.5",
+    "@types/dotenv": "^8.2.0",
+    "@types/node": "^20.3.1",
+    "@types/ws": "^8.5.5",
+    "@typescript-eslint/eslint-plugin": "^5.60.0",
+    "@typescript-eslint/parser": "^5.60.0",
+    "eslint": "^8.43.0",
+    "eslint-config-algolia": "^21.0.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-eslint-comments": "^3.2.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-jsdoc": "^46.2.6",
+    "eslint-plugin-prettier": "^4.2.1",
+    "prettier": "^2.8.8",
+    "typescript": "^5.1.3"
+  }
+}
