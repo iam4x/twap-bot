@@ -1,20 +1,10 @@
-import { OrderSide, OrderTimeInForce, OrderType } from 'safe-cex/dist/types';
+import type { OrderSide } from 'safe-cex/dist/types';
+import { OrderTimeInForce, OrderType } from 'safe-cex/dist/types';
 import { add, adjust, divide, multiply } from 'safe-cex/dist/utils/safe-math';
 
+import { DURATION, TWAP } from './utils/config';
 import { exchange } from './utils/exchange';
 import { sleep } from './utils/sleep';
-
-const DURATION = parseInt(process.env.DURATION as string, 10);
-const TWAP = (process.env.TWAP as string)
-  .split(',')
-  .map((str) => str.split('_'))
-  .map(([symbol, sizeInUSD, side]) => {
-    return {
-      symbol: `${symbol}USDT`,
-      sizeInUSD: parseFloat(sizeInUSD),
-      side: side === 'LONG' ? OrderSide.Buy : OrderSide.Sell,
-    };
-  });
 
 class TWAPManager {
   constructor(
@@ -120,7 +110,7 @@ async function main() {
   );
 
   // eslint-disable-next-line no-console
-  console.log(`Started ${twaps.length} TWAPs`);
+  console.log(`\nStarted ${twaps.length} TWAPs\n`);
 }
 
 main();

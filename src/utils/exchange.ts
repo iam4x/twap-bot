@@ -6,6 +6,7 @@ import { OrderSide } from 'safe-cex/dist/types';
 export const exchange = createExchange(process.env.EXCHANGE as any, {
   key: process.env.API_KEY as string,
   secret: process.env.API_SECRET as string,
+  extra: { tickInterval: 1000 * 60 * 5 },
 });
 
 exchange.on('error', (error: string) => {
