@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import { createExchange } from 'safe-cex';
-import type { Order, LogSeverity } from 'safe-cex/dist/types';
+import type { LogSeverity, Order } from 'safe-cex/dist/types';
 import { OrderSide } from 'safe-cex/dist/types';
 
 export const exchange = createExchange(process.env.EXCHANGE as any, {
