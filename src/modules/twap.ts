@@ -1,5 +1,11 @@
 import { OrderSide, OrderType } from 'safe-cex/dist/types';
-import { adjust, divide, multiply, add } from 'safe-cex/dist/utils/safe-math';
+import {
+  adjust,
+  divide,
+  multiply,
+  add,
+  subtract,
+} from 'safe-cex/dist/utils/safe-math';
 
 import { exchange } from '../utils/exchange';
 import { sleep } from '../utils/sleep';
@@ -54,7 +60,7 @@ export class TWAPManager {
     console.log(`Total: ${lotsCount} lots, ${total} ($${totalUSD})`);
 
     const twap = async () => {
-      const orderPrice = this.ticker.ask - pPrice;
+      const orderPrice = subtract(this.ticker.ask, pPrice);
 
       // we already have an order at this price
       // so we just update it with the new amount
