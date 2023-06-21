@@ -1,3 +1,4 @@
+/* eslint-disable max-depth */
 import groupBy from 'lodash/groupBy';
 import { OrderSide } from 'safe-cex/dist/types';
 import { add } from 'safe-cex/dist/utils/safe-math';
@@ -30,7 +31,11 @@ export const mergeOrders = async () => {
         });
 
         if (newOrderId.length) {
-          await exchange.cancelOrders(restOrders);
+          try {
+            await exchange.cancelOrders(restOrders);
+          } catch {
+            // do nothing
+          }
         }
       }
     }
@@ -54,7 +59,11 @@ export const mergeOrders = async () => {
         });
 
         if (newOrderId.length) {
-          await exchange.cancelOrders(restOrders);
+          try {
+            await exchange.cancelOrders(restOrders);
+          } catch {
+            // do nothing
+          }
         }
       }
     }

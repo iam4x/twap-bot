@@ -30,6 +30,11 @@ export const cleanOrders = async () => {
   if (toRemove.length > 0) {
     // eslint-disable-next-line no-console
     console.log(`[info] Removing ${toRemove.length} orders`);
-    await exchange.cancelOrders(toRemove);
+
+    try {
+      await exchange.cancelOrders(toRemove);
+    } catch {
+      // do nothing
+    }
   }
 };
