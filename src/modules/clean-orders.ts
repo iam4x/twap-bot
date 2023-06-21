@@ -11,15 +11,15 @@ export const cleanOrders = async () => {
     );
 
     if (ticker) {
-      const tenPercent = multiply(ticker.last, 0.1);
+      const sevenPercent = multiply(ticker.last, 0.07);
 
       if (order.side === OrderSide.Buy) {
-        const threshold = subtract(ticker.last, tenPercent);
+        const threshold = subtract(ticker.last, sevenPercent);
         return order.price < threshold;
       }
 
       if (order.side === OrderSide.Sell) {
-        const threshold = add(ticker.last, tenPercent);
+        const threshold = add(ticker.last, sevenPercent);
         return order.price > threshold;
       }
     }
@@ -27,7 +27,9 @@ export const cleanOrders = async () => {
     return false;
   });
 
-  // eslint-disable-next-line no-console
-  console.log(`[info] Removing ${toRemove.length} orders`);
-  await exchange.cancelOrders(toRemove);
+  if (toRemove.length > 0) {
+    // eslint-disable-next-line no-console
+    console.log(`[info] Removing ${toRemove.length} orders`);
+    await exchange.cancelOrders(toRemove);
+  }
 };
