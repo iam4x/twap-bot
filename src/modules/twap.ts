@@ -1,5 +1,5 @@
 import type { OrderSide } from 'safe-cex/dist/types';
-import { OrderType, OrderTimeInForce } from 'safe-cex/dist/types';
+import { OrderType } from 'safe-cex/dist/types';
 import { adjust, divide, multiply, add } from 'safe-cex/dist/utils/safe-math';
 
 import { exchange } from '../utils/exchange';
@@ -84,7 +84,6 @@ export class TWAPManager {
         amount: min,
         side: this.side,
         type: OrderType.Limit,
-        timeInForce: OrderTimeInForce.PostOnly,
       });
 
       if (orderId.length === 0) {
