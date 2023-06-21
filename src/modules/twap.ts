@@ -71,7 +71,7 @@ export class TWAPManager {
           update: { amount: newAmount },
         });
 
-        if (orderId.length === 0) {
+        if (orderId.length > 0) {
           setTimeout(() => twap(), interval);
           return;
         }
