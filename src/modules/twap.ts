@@ -1,5 +1,4 @@
-import type { OrderSide } from 'safe-cex/dist/types';
-import { OrderType } from 'safe-cex/dist/types';
+import { OrderSide, OrderType } from 'safe-cex/dist/types';
 import { adjust, divide, multiply, add } from 'safe-cex/dist/utils/safe-math';
 
 import { exchange } from '../utils/exchange';
@@ -77,20 +76,28 @@ export class TWAPManager {
         }
       }
 
-      // place a new order at this price
-      const orderId = await exchange.placeOrder({
+      const order = {
         symbol: this.symbol,
         price: orderPrice,
         amount: min,
         side: this.side,
         type: OrderType.Limit,
-      });
+      };
+
+      // place a new order at this price
+      const orderId = await exchange.placeOrder(order);
 
       if (orderId.length === 0) {
         await sleep(100);
         await twap();
         return;
       }
+
+      const action = order.side === OrderSide.Buy ? 'LONG' : 'SHORT';
+      // eslint-disable-next-line no-console
+      console.log(
+        `-> ${action} ${order.amount} ${order.symbol} @ ${order.price}`
+      );
 
       setTimeout(() => twap(), interval);
     };

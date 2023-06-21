@@ -18,6 +18,6 @@ exchange.on('log', (message: string, severity: LogSeverity) => {
 });
 
 exchange.on('fill', (order: Partial<Order>) => {
-  const action = order.side === OrderSide.Buy ? 'BUY' : 'SELL';
-  console.log(`${action} ${order.amount} ${order.symbol} @ ${order.price}`);
+  const action = order.side === OrderSide.Buy ? 'BOUGHT' : 'SOLD';
+  console.log(`<- ${action} ${order.amount} ${order.symbol} @ ${order.price}`);
 });
