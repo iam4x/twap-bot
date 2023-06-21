@@ -62,6 +62,16 @@ export class TWAPManager {
     const twap = async () => {
       const orderPrice = subtract(this.ticker.ask, pPrice);
 
+      const order = {
+        symbol: this.symbol,
+        price: orderPrice,
+        amount: min,
+        side: this.side,
+        type: OrderType.Limit,
+      };
+
+      const action = order.side === OrderSide.Buy ? 'LONG' : 'SHORT';
+
       // we already have an order at this price
       // so we just update it with the new amount
       // to avoid hitting exchange limits
@@ -71,24 +81,26 @@ export class TWAPManager {
 
       if (existingOrder) {
         const newAmount = add(existingOrder.amount, min);
-        const orderId = await exchange.updateOrder({
-          order: existingOrder,
-          update: { amount: newAmount },
-        });
 
-        if (orderId.length > 0) {
-          setTimeout(() => twap(), interval);
-          return;
+        try {
+          const orderId = await exchange.updateOrder({
+            order: existingOrder,
+            update: { amount: newAmount },
+          });
+
+          if (orderId.length > 0) {
+            // eslint-disable-next-line no-console
+            console.log(
+              `-> ${action} ${order.amount} ${order.symbol} @ ${order.price}`
+            );
+
+            setTimeout(() => twap(), interval);
+            return;
+          }
+        } catch {
+          // do nothing
         }
       }
-
-      const order = {
-        symbol: this.symbol,
-        price: orderPrice,
-        amount: min,
-        side: this.side,
-        type: OrderType.Limit,
-      };
 
       // place a new order at this price
       const orderId = await exchange.placeOrder(order);
@@ -99,7 +111,6 @@ export class TWAPManager {
         return;
       }
 
-      const action = order.side === OrderSide.Buy ? 'LONG' : 'SHORT';
       // eslint-disable-next-line no-console
       console.log(
         `-> ${action} ${order.amount} ${order.symbol} @ ${order.price}`
