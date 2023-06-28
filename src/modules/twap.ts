@@ -40,22 +40,25 @@ export class TWAPManager {
 
   start() {
     const min = this.market.limits.amount.min;
+    const fiveDollars = divide(5, this.ticker.last);
+
+    const buyAmount = Math.max(min, fiveDollars);
 
     const pAmount = this.market.precision.amount;
     const pPrice = this.market.precision.price;
 
     const amount = adjust(this.sizeInUSD / this.ticker.last, pAmount);
 
-    const lotsCount = Math.floor(divide(amount, min));
+    const lotsCount = Math.floor(divide(amount, buyAmount));
     const interval = this.duration / lotsCount;
 
-    const usd = Math.round(multiply(min, this.ticker.last) * 100) / 100;
+    const usd = Math.round(multiply(buyAmount, this.ticker.last) * 100) / 100;
     const sec = Math.floor(interval / 1000);
-    const total = multiply(min, lotsCount);
+    const total = multiply(buyAmount, lotsCount);
     const totalUSD = Math.round(multiply(total, this.ticker.last) * 100) / 100;
 
     // eslint-disable-next-line no-console
-    console.log(`\nTWAP ${min} ($${usd}) ${this.symbol} every ${sec}s`);
+    console.log(`\nTWAP ${buyAmount} ($${usd}) ${this.symbol} every ${sec}s`);
     // eslint-disable-next-line no-console
     console.log(`Total: ${lotsCount} lots, ${total} ($${totalUSD})`);
 
@@ -65,7 +68,7 @@ export class TWAPManager {
       const order = {
         symbol: this.symbol,
         price: orderPrice,
-        amount: min,
+        amount: buyAmount,
         side: this.side,
         type: OrderType.Limit,
       };
