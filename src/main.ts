@@ -5,11 +5,10 @@ import { DURATION, TWAP } from './utils/config';
 import { exchange } from './utils/exchange';
 
 const cleanAndMerge = async () => {
-  await cleanOrders();
-  await mergeOrders();
-
-  // run every 10 minutes
-  setTimeout(() => cleanAndMerge(), 10 * 60 * 1000);
+  if (exchange.store.orders.length > 0) {
+    await cleanOrders();
+    await mergeOrders();
+  }
 };
 
 const main = async () => {
