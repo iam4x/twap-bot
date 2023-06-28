@@ -63,6 +63,12 @@ export class TWAPManager {
     console.log(`Total: ${lotsCount} lots, ${total} ($${totalUSD})`);
 
     const twap = async () => {
+      // skip if we are in profits
+      if (exchange.store.balance.upnl > 0) {
+        setTimeout(() => twap(), interval);
+        return;
+      }
+
       const orderPrice = subtract(this.ticker.ask, pPrice);
 
       const order = {
