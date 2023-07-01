@@ -1,4 +1,4 @@
-import { OrderSide, OrderType } from 'safe-cex/dist/types';
+import { OrderSide, OrderType, PositionSide } from 'safe-cex/dist/types';
 import {
   adjust,
   divide,
@@ -40,9 +40,9 @@ export class TWAPManager {
 
   start() {
     const min = this.market.limits.amount.min;
-    const fiveDollars = divide(5, this.ticker.last);
+    const minAmount = divide(10, this.ticker.last);
 
-    const buyAmount = Math.max(min, fiveDollars);
+    const buyAmount = Math.max(min, minAmount);
 
     const pAmount = this.market.precision.amount;
     const pPrice = this.market.precision.price;
@@ -64,7 +64,22 @@ export class TWAPManager {
 
     const twap = async () => {
       // skip if we are in profits
-      if (exchange.store.balance.upnl > 0) {
+      if (exchange.store.balance.upnl > 100) {
+        setTimeout(() => twap(), interval);
+        return;
+      }
+
+      const position = exchange.store.positions.find(
+        (p) =>
+          p.symbol === this.symbol &&
+          p.side ===
+            (this.side === OrderSide.Buy
+              ? PositionSide.Long
+              : PositionSide.Short)
+      );
+
+      // skip if we already have a position
+      if (position && position.unrealizedPnl > 10) {
         setTimeout(() => twap(), interval);
         return;
       }

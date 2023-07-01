@@ -1,27 +1,19 @@
-import { cleanOrders } from './modules/clean-orders';
-import { mergeOrders } from './modules/merge-orders';
 import { TWAPManager } from './modules/twap';
 import { DURATION, TWAP } from './utils/config';
 import { exchange } from './utils/exchange';
-
-const cleanAndMerge = async () => {
-  if (exchange.store.orders.length > 0) {
-    await cleanOrders();
-    await mergeOrders();
-  }
-};
+import { sleep } from './utils/sleep';
 
 const main = async () => {
   await exchange.start();
-  await cleanAndMerge();
 
-  const twaps = TWAP.map(
-    ({ symbol, sizeInUSD, side }) =>
-      new TWAPManager(symbol, sizeInUSD, DURATION, side)
-  );
+  const twaps = [];
+  for (const { symbol, sizeInUSD, side } of TWAP) {
+    twaps.push(new TWAPManager(symbol, sizeInUSD, DURATION, side));
+    await sleep(1000);
+  }
 
   // eslint-disable-next-line no-console
-  console.log(`\nStarted ${twaps.length} TWAPs\n`);
+  console.log(`\nStarted ${TWAP.length} TWAPs\n`);
 };
 
 main();
